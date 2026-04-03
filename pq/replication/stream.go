@@ -278,9 +278,9 @@ func (s *stream) sink(ctx context.Context) {
 // connection is in a corrupted state and the caller should panic.
 func (s *stream) sinkLoop(ctx context.Context, buf *messageBuffer, streamBuf *streamTxBuffer) (corrupted bool) {
 	for {
-		msgCtx, cancel := context.WithDeadline(context.Background(), time.Now().Add(300*time.Millisecond))
-		rawMsg, err := s.conn.ReceiveMessage(msgCtx)
-		cancel()
+		//msgCtx, cancel := context.WithDeadline(context.Background(), time.Now().Add(300*time.Millisecond))
+		rawMsg, err := s.conn.ReceiveMessage(context.Background())
+		//cancel()
 
 		if err != nil {
 			if s.closed.Load() {

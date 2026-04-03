@@ -373,13 +373,15 @@ func (s *stream) handleXLogData(data []byte, buf *messageBuffer, streamBuf *stre
 
 	s.metric.SetCDCLatency(time.Now().Sub(xld.ServerTime).Nanoseconds())
 
-	logger.Debug("wal received",
-		"walData", string(xld.WALData),
-		"walDataByte", slice.ConvertToInt(xld.WALData),
-		"walStart", xld.WALStart,
-		"walEnd", xld.ServerWALEnd,
-		"serverTime", xld.ServerTime,
-	)
+	if s.config.DebugMode {
+		logger.Debug("wal received",
+			"walData", string(xld.WALData),
+			"walDataByte", slice.ConvertToInt(xld.WALData),
+			"walStart", xld.WALStart,
+			"walEnd", xld.ServerWALEnd,
+			"serverTime", xld.ServerTime,
+		)
+	}
 
 	decodedMsg, err := message.New(xld.WALData, xld.ServerTime, s.relation)
 	if err != nil || decodedMsg == nil {
